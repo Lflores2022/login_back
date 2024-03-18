@@ -21,11 +21,36 @@ const Products = db.define('product', {
             len: [3, 100]
         }
     },
-    price: {
-        type: DataTypes.INTEGER,
+    addres: {
+        type: DataTypes.STRING,
         allowNull: false,
         validate:{
             notEmpty: true,
+            len: [3, 100]
+        }
+    },
+    phoneNumber: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate:{
+            notEmpty: true,
+            len: [3, 10]
+        }
+    }, 
+    CURP: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate:{
+            notEmpty: true,
+            len: [3, 15]
+        }
+    },
+    NSS: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate:{
+            notEmpty: true,
+            len: [3, 12]
         }
     },
     userId: {
