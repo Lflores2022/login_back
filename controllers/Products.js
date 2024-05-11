@@ -7,7 +7,7 @@ export const getProducts = async (req, res) =>{
         let response;
         if(req.role === "admin"){
             response = await Product.findAll({
-                attributes:['uuid','name','price'],
+                attributes:['uuid','name','addres', 'phoneNumber', 'CURP', 'NSS'],
                 include:[{
                     model: User,
                     attributes:['name','email']
@@ -15,7 +15,7 @@ export const getProducts = async (req, res) =>{
             });
         }else{
             response = await Product.findAll({
-                attributes:['uuid','name','price'],
+                attributes:['uuid','name','addres', 'phoneNumber', 'CURP', 'NSS'],
                 where:{
                     userId: req.userId
                 },
@@ -42,7 +42,7 @@ export const getProductById = async(req, res) =>{
         let response;
         if(req.role === "admin"){
             response = await Product.findOne({
-                attributes:['uuid','name','price'],
+                attributes:['uuid','name','addres', 'phoneNumber', 'CURP', 'NSS'],
                 where:{
                     id: product.id
                 },
@@ -53,7 +53,7 @@ export const getProductById = async(req, res) =>{
             });
         }else{
             response = await Product.findOne({
-                attributes:['uuid','name','price'],
+                attributes:['uuid','name','addres', 'phoneNumber', 'CURP', 'NSS'],
                 where:{
                     [Op.and]:[{id: product.id}, {userId: req.userId}]
                 },
@@ -70,11 +70,14 @@ export const getProductById = async(req, res) =>{
 }
 
 export const createProduct = async(req, res) =>{
-    const {name, price} = req.body;
+    const {name, addres, phoneNumber, CURP, NSS} = req.body;
     try {
         await Product.create({
             name: name,
-            price: price,
+            addres: addres,
+            phoneNumber: phoneNumber,
+            CURP: CURP,
+            NSS: NSS,
             userId: req.userId
         });
         res.status(201).json({msg: "Product Created Successfuly"});
@@ -91,16 +94,16 @@ export const updateProduct = async(req, res) =>{
             }
         });
         if(!product) return res.status(404).json({msg: "product not found"});
-        const {name, price} = req.body;
+        const {name, addres, phoneNumber, CURP, NSS} = req.body;
         if(req.role === "admin"){
-            await Product.update({name, price},{
+            await Product.update({name, addres, phoneNumber, CURP, NSS},{
                 where:{
                     id: product.id
                 }
             });
         }else{
             if(req.userId !== product.userId) return res.status(403).json({msg: "Invalid user"});
-            await Product.update({name, price},{
+            await Product.update({name, addres, phoneNumber, CURP, NSS},{
                 where:{
                     [Op.and]:[{id: product.id}, {userId: req.userId}]
                 }
@@ -120,7 +123,7 @@ export const deleteProduct = async(req, res) =>{
             }
         });
         if(!product) return res.status(404).json({msg: "product not found"});
-        const {name, price} = req.body;
+        const {name, addres, phoneNumber, CURP, NSS} = req.body;
         if(req.role === "admin"){
             await Product.destroy({
                 where:{
